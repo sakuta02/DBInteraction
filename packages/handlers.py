@@ -27,19 +27,24 @@ async def get_info(message: Message):
     await message.answer(text=phrases["rest"], reply_markup=keyboard_choose_room.as_markup())
 
 
-@rt.callback_query(lambda x: x.data in ["exit", "look"])
+@rt.callback_query(lambda x: x.data == 'exit')
+async def send_menu(callback: CallbackQuery):
+    await callback.message.delete()
+    await callback.message.answer(text=phrases["rest"], reply_markup=keyboard_choose_room.as_markup())
+
+
+@rt.callback_query(lambda x: x.data == "look")
 async def exit_menu(callback: CallbackQuery):
     value = users[callback.from_user.id].check_reservations()
     if not value:
-        await callback.message.edit_text(text=phrases["rest"], reply_markup=keyboard_choose_room.as_markup())
+        await callback.message.edit_text(text=phrases["no_info"],
+                                         reply_markup=InlineKeyboardBuilder([[button_exit]]).as_markup())
     else:
         date_res, time_res = str(value[0]).split()
         room_number = value[1]
         if room_number == "3":
             room_number = "VIP"
-        await callback.message.answer(text=f'''Дата вышей резервации: {date_res}
-        Время: {time_res}
-        Номер зала: {room_number}''')
+        await callback.message.answer(text=phrases["info_res"].format(date_res, time_res[:-3], room_number))
 
 
 @rt.callback_query(lambda x: x.data in "123")
@@ -55,7 +60,10 @@ async def show_dates(callback: CallbackQuery):
         )
         for day in week_to
     ]
-    await callback.message.edit_text(text=phrases["day"], reply_markup=InlineKeyboardBuilder([day_buttons[:4], day_buttons[4:], [button_exit]]).as_markup())
+    await callback.message.edit_text(text=phrases["day"],
+                                     reply_markup=InlineKeyboardBuilder(
+                                         [day_buttons[:4], day_buttons[4:], [button_exit]]
+                                     ).as_markup())
 
 
 @rt.callback_query(lambda x: 'day_' in x.data)
@@ -69,8 +77,8 @@ async def show_free_time(callback: CallbackQuery):
                                                       values)), [button_exit]])
         await callback.message.edit_text(text=phrases["time"], reply_markup=to_response.as_markup())
     else:
-        await callback.message.edit_text(text=phrases["no_time"], reply_markup=InlineKeyboardBuilder(
-            [[button_exit]]).as_markup())
+        await callback.message.edit_text(text=phrases["no_time"],
+                                         reply_markup=InlineKeyboardBuilder([[button_exit]]).as_markup())
     
 
 @rt.callback_query(lambda x: 'call_' in x.data)

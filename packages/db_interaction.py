@@ -111,3 +111,4 @@ class DBInteraction:
         for id_u, number, name in values:
             users[id_u] = DBInteraction(id_u, number, name)
         DBInteraction.fill_columns()
+        print("BOT's working")

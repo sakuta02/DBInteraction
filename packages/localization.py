@@ -9,7 +9,9 @@ phrases = {
     "time": "Выберите удобное вам время",
     "no_time": "К сожалению на этот день у нас нет свободных столиков",
     "has": "У вас уже есть зарезервированный столик",
-    "successfully": "Бронирование прошло успешно!"
+    "successfully": "Бронирование прошло успешно!",
+    "info_res": "<b>Информация по вашей брони</b>\nДата брони: {}\nВремя брони: {}\nНомер зала: {}",
+    "no_info": "<b>Извините, но у вас нет ни одной брони</b> 😆"
 }
 
 buttons = {
@@ -35,5 +37,5 @@ button_vip_room = InlineKeyboardButton(text=buttons["vip"], callback_data="3")
 keyboard_choose_room = InlineKeyboardBuilder([[button_first_room, button_second_room], [button_vip_room]])
 
 # Watch table
-butoon_watch = InlineKeyboardButton(text=buttons["look"], callback_data="look")
-keyboard_look = InlineKeyboardBuilder([[butoon_watch]])
+button_watch = InlineKeyboardButton(text=buttons["look"], callback_data="look")
+keyboard_look = InlineKeyboardBuilder([[button_watch]])
